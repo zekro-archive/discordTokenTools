@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Discord Token Checker</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <style>
+        table, th, td {
+            border: 1px solid white;
+            border-collapse: collapse;
+            padding: 5px 10px 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <center style="margin-top: 150px;">
+        <h1>TOKEN CHECKER</h1>
+        <input type="password" class="textbox_noscale" id="inpt_token" autocomplete="off" placeholder="Discord Bot Token">
+        <br>
+        <button class="button" id="submit">CHECK</button>
+        <div id="info">
+        </div>
+        <p style="position: absolute; bottom: 3px; left: 0px; text-align: center; width: 100%;">© zekro Development 2018</p>
+    </center>
+
+    <script src="js/socket.io-1.3.7.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+        
+        var info = $('#info');
+        var guilds;
+
+        var socket = io();
+        $('#submit').click(function() {
+            socket.emit('tokencheck', $('#inpt_token').val())
+        });
+
+        socket.on('login', function() {
+            info.empty();
+            info.append($('<p>').text('Logging in...'));
+        });
+
+        socket.on('response', function(data) {
+
+            var dataDom = [
+                $('<tr>').append([
+                    $('<td>').text('Valid'),
+                    $('<td>').text(data.Valid ? '✔️' : '❌'),
+                ])
+            ];
+
+            if (data.Valid) {
+                var appends = [
+                    $('<tr>').append([
+                        $('<td>').text('Account ID'),
+                        $('<td>').text(data.User.ID),
+                    ]),
+                    $('<tr>').append([
+                        $('<td>').text('Tag'),
+                        $('<td>').text(`${data.User.Username}#${data.User.Discriminator}`),
+                    ]),
+                    $('<tr>').append([
+                        $('<td>').text('Guilds Number'),
+                        $('<td>').text(data.NGuilds),
+                    ]),
+                    $('<tr>').append([
+                        $('<td>').text('Guilds'),
+                        $('<td>').append(
+                            $('<button>')
+                                .attr('class', 'button')
+                                .text('SHOW')
+                                .click(() => {
+                                    window.open('/guildswindow.html', 'Guilds', 'width=800,height=500');
+                                    guilds = data.Guilds;
+                                })
+                        ),
+                    ])
+                ];
+
+                appends.forEach(d => dataDom.push(d));
+            }
+
+            info.empty();
+            info.append(
+                $('<table>')
+                    .attr('style', '/*width:25%;*/ margin-top: 80px;')
+                    .attr('border', '1')
+                    .append(dataDom)
+            );
+        })
+
+    </script>
+</body>
+
+</html>
