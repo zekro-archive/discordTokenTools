@@ -4,13 +4,14 @@ body {
     background-color: rgb(30, 30, 30)
 }
 
-p, h1, h2, h3, h4, h5, h6, a, table, tr, td, th, li {
+p, h1, h2, h3, h4, h5, h6, table, tr, td, th, li {
     font-family: 'Roboto', sans-serif;
     color: white;
 }
 
 a {
     text-decoration: none;
+    color: #4DD0E1;
 }
 
 table, th, td {
@@ -52,7 +53,6 @@ table, th, td {
 }
 
 .button {
-    margin-top: 20px;
     height: 25px;
     width: 70px;
     background-color: transparent;

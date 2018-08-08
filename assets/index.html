@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Discord Token Checker v.0.1.0</title>
+    <title>Discord Token Tools</title>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <style>
         table, th, td {
@@ -14,85 +14,25 @@
 </head>
 
 <body>
-    <a href="https://github.com/zekroTJA/tokenChecker"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+    <a href="https://github.com/zekroTJA/discordTokenTools"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 
     <center style="margin-top: 150px;">
-        <h1>TOKEN CHECKER</h1>
-        <input type="password" class="textbox_noscale" id="inpt_token" autocomplete="off" placeholder="Discord Bot Token">
+        <h1 style="margin-bottom: 5px;">TOKEN TOOLS</h1>
+        <p style="margin-top: 0px;">v.0.2.0</p>
+        <input type="password" class="textbox_noscale" id="inpt_token" style="margin-top: 20px;" autocomplete="off" placeholder="Discord Bot Token">
         <br>
-        <button class="button" id="submit">CHECK</button>
+        <button class="button" style="margin-top: 20px;" id="submit">CHECK</button>
         <div id="info">
         </div>
-        <p style="position: absolute; bottom: 3px; left: 0px; text-align: center; width: 100%;">© zekro Development 2018</p>
+
+        <div style="position: absolute; bottom: 3px; left: 0px; text-align: center; width: 100%;">
+            <p>© zekro Development 2018 | <a href="https://github.com/zekroTJA/discordTokenTools/blob/master/CHANGELOG.md" target="_blank">CHANGELOG</a></p>
+        </div>
     </center>
 
-    <script src="js/socket.io-1.3.7.js"></script>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script>
-        
-        var info = $('#info');
-        var guilds;
-
-        var socket = io();
-        $('#submit').click(function() {
-            socket.emit('tokencheck', $('#inpt_token').val())
-        });
-
-        socket.on('login', function() {
-            info.empty();
-            info.append($('<p>').text('Logging in...'));
-        });
-
-        socket.on('response', function(data) {
-
-            var dataDom = [
-                $('<tr>').append([
-                    $('<td>').text('Valid'),
-                    $('<td>').text(data.Valid ? '✔️' : '❌'),
-                ])
-            ];
-
-            if (data.Valid) {
-                var appends = [
-                    $('<tr>').append([
-                        $('<td>').text('Account ID'),
-                        $('<td>').text(data.User.ID),
-                    ]),
-                    $('<tr>').append([
-                        $('<td>').text('Tag'),
-                        $('<td>').text(`${data.User.Username}#${data.User.Discriminator}`),
-                    ]),
-                    $('<tr>').append([
-                        $('<td>').text('Guilds Number'),
-                        $('<td>').text(data.NGuilds),
-                    ]),
-                    $('<tr>').append([
-                        $('<td>').text('Guilds'),
-                        $('<td>').append(
-                            $('<button>')
-                                .attr('class', 'button')
-                                .text('SHOW')
-                                .click(() => {
-                                    window.open('/guildswindow.html', 'Guilds', 'width=800,height=500');
-                                    guilds = data.Guilds;
-                                })
-                        ),
-                    ])
-                ];
-
-                appends.forEach(d => dataDom.push(d));
-            }
-
-            info.empty();
-            info.append(
-                $('<table>')
-                    .attr('style', '/*width:25%;*/ margin-top: 80px;')
-                    .attr('border', '1')
-                    .append(dataDom)
-            );
-        })
-
-    </script>
+    <script src="lib/socket.io-1.3.7.js"></script>
+    <script src="lib/jquery-3.3.1.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

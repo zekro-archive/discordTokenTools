@@ -2,6 +2,7 @@ package main
 
 import (
 	//"fmt"
+	"time"
 	"github.com/bwmarrin/discordgo"
 	"github.com/googollee/go-socket.io"
 )
@@ -23,7 +24,6 @@ type Data struct {
 	Valid    bool
 	User     *DUser
 	NGuilds  int
-	Guilds   []*DGuild
 }
 
 
@@ -36,14 +36,6 @@ func DiscordLogin(token string, so socketio.Socket) error {
 
 	dc.AddHandlerOnce(func(s *discordgo.Session, e *discordgo.Ready) {
 		nguilds := len(e.Guilds)
-		guilds := make([]*DGuild, nguilds)
-		for i, g := range e.Guilds {
-			guilds[i] = &DGuild{
-				g.ID,
-				g.Name,
-				g.OwnerID,
-			}
-		}
 
 		data := Data{
 			true,
@@ -53,10 +45,19 @@ func DiscordLogin(token string, so socketio.Socket) error {
 				e.User.Discriminator,
 			},
 			nguilds,
-			guilds,
 		}
-
 		so.Emit("response", data)
+
+		time.Sleep(time.Duration(40 * nguilds) * time.Millisecond)
+		guilds := make([]*DGuild, nguilds)
+		for i, g := range e.Guilds {
+			guilds[i] = &DGuild{
+				g.ID,
+				g.Name,
+				g.OwnerID,
+			}
+		}
+		so.Emit("response_guilds", guilds)
 
 		dc.Close()
 	})
