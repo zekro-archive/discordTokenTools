@@ -28,7 +28,13 @@ func main() {
 	server.On("connection", func(so socketio.Socket) {
 		so.Join("main")
 		so.On("tokencheck", func(token string) {
-			DiscordLogin(token, so)
+
+			events := make(chan *Event)
+			go GetTokenData(token, events)
+
+			for e := range events {
+				so.Emit(e.Name, e.Data)
+			}
 		})
 	})
 
